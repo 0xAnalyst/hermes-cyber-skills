@@ -19,6 +19,7 @@ Gateway gotchas (cost hours if unknown):
 - A `count` with multiple `match_phrase` clauses can return 0 where a sampled `_search` proves hits — cross-check any zero on a signal that matters.
 - Token trap: phrase search matches whole tokens. `php2shell` does **not** match `php2shell22fe580e9` or `php2shellCVE2026109618`. Use `wildcard` on the relevant field, or query each literal exactly.
 - IIS W3C rows arrive unparsed (`status`/`originIp` empty) — parse `logMessage` with the signature regexes instead of filtering on parsed fields.
+- `_source` is stripped on this gateway: a `_search` with `"_source": [...]` or `"_source": true` returns hits with no fields. Use `"stored_fields": ["*"]` to read `logMessage` (and keep `size` small). `_count` rejects `size`/`stored_fields` — passing them silently returns an error body with no `count`, so keep count bodies to `{"query": …}` only.
 
 Starter bodies (adapt field names per lane):
 

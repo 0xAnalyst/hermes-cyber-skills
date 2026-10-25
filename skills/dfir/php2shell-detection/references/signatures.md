@@ -42,6 +42,7 @@ B2's digest changes with the target's leaked address range and the shell command
 | Nested-file | boundary `PROBE`; field `files[R00000][a][a][a]…` (≈62 `[a]` levels deep), filename empty | 300,067 B complete, SHA-256 `f3c6533141734d3c5a7e781227542da4ceb5b06e0250b8c8ac3e36b79e946891` |
 | Survey (benign) | `PHP_SESSION_UPLOAD_PROGRESS=internet-census`, file `internet-census.txt`, UA `python-requests/*`, PTR `*.internet-census.org` | 302 B |
 | Recon probe (benign) | `PHP_SESSION_UPLOAD_PROGRESS=probe_recon`, boundary `----recon0xdeadbeef`, file `probe.txt` | 523 B |
+| Purpose-built checker (scanner, not exploitation) | UA `sudo3rs-PHP2Shell-Checker/<version>` (also `*-PHP2Shell-Checker/*`) | LFI probes against `/` and `.php` endpoints (`p=../../../../etc/passwd`, `page=../../../../etc/passwd`), usually 403 at the edge; treat as exposure inventory — block the source and watch for repeats |
 
 ## Response / outcome signals
 
