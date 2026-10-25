@@ -49,7 +49,7 @@ skill still runs. Two gates enforce this on every sync:
 | Gate | Catches | Behaviour |
 |---|---|---|
 | `scripts/publish_scrub.py` + `publish-scrub.json` | client/vendor names, in content **and** filenames | rewrites to placeholders, fails on leftovers |
-| `scripts/internal_info_lint.py` | personal paths, token/key shapes, `.internal`-style suffixes | fails the sync; warns on private-range IPs and unapproved emails |
+| `scripts/internal_info_lint.py` | personal paths, token/key shapes, internal-only domain suffixes | fails the sync; warns on private-range IPs and unapproved emails |
 
 ## Adding a skill
 
