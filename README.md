@@ -1,4 +1,4 @@
-# hermes-skills
+# hermes-cyber-skills
 
 A growing collection of skills for [Hermes Agent](https://hermes-agent.nousresearch.com/docs) —
 reusable, evidence-driven methodologies that load automatically when a task matches.
@@ -32,9 +32,9 @@ same layout and quality conventions.
 ## Install into Hermes
 
 ```bash
-git clone https://github.com/0xAnalyst/hermes-skills.git
+git clone https://github.com/0xAnalyst/hermes-cyber-skills.git
 mkdir -p ~/.hermes/skills/<category>
-cp -r hermes-skills/skills/<skill-name> ~/.hermes/skills/<category>/
+cp -r hermes-cyber-skills/skills/<skill-name> ~/.hermes/skills/<category>/
 ```
 
 ## Credits & provenance
