@@ -68,18 +68,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1568 Dynamic Resolution | DNS | fast-flux or DDNS patterns for the same hostname |
 | T1095 Non-Application Layer Protocol | Firewall/netflow | ICMP or raw protocol carrying payload |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Commercial C2 frameworks (Brute Ratel, AdaptixC2) and commodity frameworks (Metasploit)
-  appear in the same intrusions (**C2**, **C3**, **C6**) — tool novelty is not the signal, the
-  absence of any engagement that would justify it is.
-- Loader → stage downloads from the same infrastructure, often on high ports (**C1**).
-- Long dwell with tool changes (**C6**) means a single-day beacon sweep will miss the intrusion;
-  hunt novelty across the whole window.
-
 ## Pitfalls
 
 - **Update and telemetry agents beacon by design.** Application name, allow rule and byte

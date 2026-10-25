@@ -67,18 +67,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1563 Remote Session Hijacking | VPN/EDR | session reconnection from a different source |
 | T1021.001 Remote Desktop Protocol | 4624 type 10 | workstation-to-workstation RDP |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Remote execution whose child processes are spawned by the **WMI provider host** is the
-  fingerprint of WMI-based lateral movement (**C1**).
-- Remote-desktop logons using an account created minutes earlier (**C3**), and remote service
-  execution via a framework across many hosts (**C2**).
-- SMB sweeps from the beachhead beginning about an hour after initial access precede the lateral
-  phase (**C2**) — the sweep is the early warning.
-
 ## Pitfalls
 
 - **Management, backup and AV move laterally by design.** Their service accounts and pairs

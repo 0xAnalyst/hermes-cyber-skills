@@ -67,16 +67,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1537 Transfer Data to Cloud Account | Cloud audit | cross-account copy or public share |
 | T1029 Scheduled Transfer | Netflow | recurring large transfers outside business hours |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Egress follows staging: FTP client installed, data collected in a program-data directory,
-  then large outbound transfers (**C3**).
-- The channel can be entirely conventional — a legitimate FTP client over a legitimate port —
-  which is why volume plus host role plus timing beats protocol inspection.
-
 ## Pitfalls
 
 - **Backups and replication look identical.** Large scheduled transfers are usually legitimate;

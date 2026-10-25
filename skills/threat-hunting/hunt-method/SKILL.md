@@ -100,5 +100,3 @@ Never write "clean" without the plane. Never write "no evidence" when the answer
 ## References
 
 - `references/hunt-report-template.md` — the five-part output, ready to fill.
-- `references/casebook.md` — behaviours observed in public DFIR case reports, indexed by tactic;
-  use them as hypothesis shapes, never as IOC lists.

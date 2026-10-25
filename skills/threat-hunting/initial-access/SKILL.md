@@ -69,18 +69,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1566 Phishing | Mail gateway | attachment delivered, then a process chain on the recipient host |
 | T1195 Supply Chain | Vendor telemetry | largely out of internal view — track advisories instead |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Unpatched internet-facing **Java application servers** were the entry point in two of the
-  richest public cases (**C1** Confluence template injection, **C2** message-broker RCE), and in
-  **C2** the actor returned to the *same unpatched host* 18 days after being evicted.
-- **Internet-facing remote desktop** with weak passwords falls to spray, not exploit (**C4**).
-- The successful logon is usually not the account with the most failures (**C4**) — hunt the
-  failure *distribution*, then the first successful interactive logon from a new network.
-
 ## Pitfalls
 
 - **Scanners generate exploit-shaped 403s constantly.** Volume of exploit attempts is not

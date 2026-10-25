@@ -70,17 +70,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1552 Unsecured Credentials | EDR/file/cloud | credential-shaped file reads, metadata endpoint access |
 | T1555 Credentials from Password Stores | EDR | credential database touched by a non-browser process |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Signed-utility abuse for memory dumping: a system DLL invoked from a shell after enumerating
-  the credential process by name to obtain its PID (**C3**).
-- Remote thread into the credential process seconds after loader start (**C1**); dump call traces
-  reading "unknown" indicate injected code (**C2**).
-- Dumps occur on **multiple hosts**, not just the beachhead — scope the query estate-wide (**C2**).
-
 ## Pitfalls
 
 - **Security products read credential memory by design.** Signer and product lineage decide;

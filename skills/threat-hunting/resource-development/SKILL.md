@@ -66,16 +66,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1608 Stage Capabilities | Proxy/DNS | hosting domain serving payload right before detonation |
 | T1588 Obtain Capabilities | EDR/file | cracked or repurposed tooling installers |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Delivery infrastructure increasingly arrives through **search results and malvertising** rather
-  than mail (**C3**, **C5**) — domains are freshly staged and look like software vendors.
-- Fake "converter" and "fix this file" sites are staging infrastructure for loader families
-  (**C5**); the user is persuaded to run the payload themselves.
-
 ## Pitfalls
 
 - **Legitimate new domains.** Marketing campaigns, new SaaS vendors and regional partners all

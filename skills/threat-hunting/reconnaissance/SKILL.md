@@ -66,17 +66,6 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1598 Phishing for Information | Mail gateway, identity provider | credential-harvest domain, reply-to mismatch, urgency framing |
 | T1593 Search Open Websites/Domains | External only | not observable internally — track via brand monitoring instead |
 
-## Observed in public case reports
-
-Paraphrased from The DFIR Report case studies; sources and full chains in
-`hunt-method/references/casebook.md`.
-
-- Exploited appliances are frequently probed first by one source that runs a single identity
-  command and leaves, then by another that stays (**C1**). Probe-then-nothing is recon; probe-then-
-  follow-up is the intrusion.
-- Exposed scanning infrastructure is itself a case study: mass exploitation at scale is
-  industrialised, automated and continuous (**C7**).
-
 ## Pitfalls
 
 - **Crawlers look like scanners.** Search-index and ad-verification agents fetch odd paths at
