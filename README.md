@@ -11,8 +11,8 @@ same layout and quality conventions.
 
 | Skill | Version | Purpose |
 |---|---|---|
-| [`skills/api-pentest`](skills/api-pentest/) | 1.1.0 | Non-destructive black-box API security assessment: recon → auth matrix → authz-scope proof → hardening → evidence-backed report, with OWASP API:2023 mapping and a 10-row coverage gate |
-| [`skills/api-retest-harness`](skills/api-retest-harness/) | 0.1.0 | Turns a pentest evidence JSONL into a rerunnable probe script — remediation checks become one command with baseline deltas; credentials never enter generated artifacts |
+| [`skills/api-pentest`](skills/api-pentest/) | 1.2.0 | Non-destructive black-box API security assessment: recon → auth matrix → authz-scope proof → hardening → evidence-backed report, with OWASP API:2023 mapping and a 10-row coverage gate |
+| [`skills/api-retest-harness`](skills/api-retest-harness/) | 0.1.1 | Turns a pentest evidence JSONL into a rerunnable probe script — remediation checks become one command with baseline deltas; credentials never enter generated artifacts |
 | [`skills/_template`](skills/_template/) | — | Scaffold for new skills — copy, rename, fill TODOs |
 
 ## Adding a skill
