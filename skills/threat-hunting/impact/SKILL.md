@@ -67,6 +67,16 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1491 Defacement | FIM/web | web root modified then served publicly |
 | T1498 Network Denial of Service | Netflow | volumetric traffic originating inside |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- Ransomware lands **days to weeks** after initial access (**C2** day 18, **C6** near two
+  months), so an intrusion that looks contained can still be pre-impact.
+- A host that was "remediated" can be re-entered if the entry vector was never patched (**C2**).
+  Verify the fix, not the eviction.
+
 ## Pitfalls
 
 - **Backup software performs mass file operations.** Compare to the job schedule; a backup

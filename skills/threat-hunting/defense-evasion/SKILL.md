@@ -67,6 +67,18 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1027 Obfuscated Files or Information | EDR command line | high-entropy payload or layered base64 |
 | T1553 Subvert Trust Controls | EDR | signature validation disabled or trust store modified |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- System-process injection shows up as **file writes attributed to a system process** — a batch
+  script written by an injected logon process, not by a user session (**C2**).
+- Mixed-case command invocation and loader binaries named like random strings inside product
+  directories (**C1**, **C3**).
+- Handle-open fan-out across unrelated processes before credential access is a strong loader
+  tell (**C1**).
+
 ## Pitfalls
 
 - **IT disables protection during troubleshooting.** Check tickets before escalating; the

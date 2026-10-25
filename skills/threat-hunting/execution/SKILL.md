@@ -69,6 +69,18 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1204 User Execution | EDR | user-writable download directory followed by execution |
 | T1106 Native API | EDR API telemetry | direct syscalls from binaries with no vendor lineage |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- The application or service process is the parent that matters: a Java service account
+  spawning `cmd` (**C2**), an application server spawning a shell after an exploit (**C1**).
+- Installer packages executed from a user profile (Desktop/Downloads) parent unexpected
+  children (**C3**); document-shaped scripts launching installers are the other common shape (**C6**).
+- Loaders fetch their next stage from the same host that delivered them, often on an unusual
+  high port (**C1**).
+
 ## Pitfalls
 
 - **Management platforms use the same primitives.** SCCM, PDQ, Ansible and monitoring agents

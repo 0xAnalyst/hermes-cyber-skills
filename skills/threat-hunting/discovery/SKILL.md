@@ -67,6 +67,17 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1082 System Information Discovery | EDR process | discovery utilities on a server role where they are rare |
 | T1526 Cloud Service Discovery | Cloud audit | Describe/List burst across unused services |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- A compact enumeration burst — system info, domain/trust listing, group membership, privileged
+  groups — completed in **under five minutes** (**C3**).
+- Discovery commands run as children of the exploited application server (**C1**), or are absent
+  immediately after an exploit and replaced by SMB sweeps about an hour later (**C2**).
+- Absence of discovery is not absence of intent: some actors go straight to credential access.
+
 ## Pitfalls
 
 - **Vulnerability scanners and inventory agents do exactly this.** Range plus cadence plus

@@ -66,6 +66,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1560 Archive Collected Data | EDR process | archive tool on a server role outside schedule |
 | T1113 Screen Capture | EDR | capture API in an unexpected binary |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- A consumer FTP client installed on **servers** is a staging tool, not a user application (**C3**).
+- Data staged in program-data directories before outbound transfer (**C3**); staging happens
+  after privilege escalation, not before.
+
 ## Pitfalls
 
 - **Archiving is routine.** Log rotation, backups and packaging all compress; compare to the

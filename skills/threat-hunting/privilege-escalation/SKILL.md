@@ -67,6 +67,16 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1098 Account Manipulation | Directory/cloud audit | role grant outside approval, then immediate use |
 | T1055 Process Injection | EDR | remote thread into a privileged process |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- Service creation is the common elevation path for an interactive actor on Windows: a new
+  service executing a payload runs as SYSTEM (**C2**).
+- Privilege is often *granted* rather than taken: a fresh account added to a highly privileged
+  group within seconds of creation (**C3**). Hunt the group change, not the exploit.
+
 ## Pitfalls
 
 - **Backup and security agents impersonate by design.** A cross-identity token from a signed

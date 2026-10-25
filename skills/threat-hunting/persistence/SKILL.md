@@ -69,6 +69,18 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1136 Create Account | 4720, directory audit | account created outside onboarding workflow |
 | T1505 Server Software Component | EDR file + web logs | new script in a served directory, then GET/POST to it |
 
+## Observed in public case reports
+
+Paraphrased from The DFIR Report case studies; sources and full chains in
+`hunt-method/references/casebook.md`.
+
+- Commercial remote-access tools installed as **autostart services** (**C2**) survive reboots and
+  look legitimate to a service-name search.
+- New accounts created seconds after credential access, with predictable backup-style names, are
+  a recurring shape (**C1**, **C3**) — and are immediately used.
+- Payload hosting via a **new service** on the beachhead, plus batch files written into
+  application install directories (**C1**, **C2**).
+
 ## Pitfalls
 
 - **Patch and monitoring agents create services and tasks legitimately.** Compare to the
