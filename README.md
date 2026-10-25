@@ -11,8 +11,6 @@ reusable, evidence-driven methodologies that load automatically when a task matc
 |---|---|---|
 | [`skills/api-pentest`](skills/api-pentest/) | 1.1.0 | Non-destructive black-box API security assessment: recon → auth matrix → authz-scope proof → hardening → evidence-backed report, with OWASP API:2023 mapping and a 10-row coverage gate |
 | [`skills/api-retest-harness`](skills/api-retest-harness/) | 0.1.0 | Turns a pentest evidence JSONL into a rerunnable probe script — remediation checks become one command with baseline deltas; credentials never enter generated artifacts |
-| [`skills/web-pentest`](skills/web-pentest/) | 1.0.0 | Authorized web-application pentest: recon, proof-based exploits, reporting (mirrored — see credits) |
-| [`skills/red-team-engagement`](skills/red-team-engagement/) | — | Planning and executing authorized red-team engagements, distinct from pentests (mirrored — see credits) |
 | [`skills/_template`](skills/_template/) | — | Scaffold for new skills — copy, rename, fill TODOs |
 
 ## Adding a skill
@@ -43,10 +41,11 @@ cp -r hermes-skills/skills/<skill-name> ~/.hermes/skills/<category>/
   upstream notice retained in the file header.
 - `api-pentest/references/owasp-api-mapping.md` — category definitions and CWE
   mappings from the official OWASP API Security Top 10 (2023) pages (owasp.org).
-- `web-pentest` — mirrored verbatim, MIT © Teknium (teknium1), Hermes Agent.
-- `red-team-engagement` — mirrored verbatim from
-  [briiirussell/cybersecurity-skills](https://github.com/briiirussell/cybersecurity-skills),
-  MIT © 2026 Bri Russell.
+- `web-pentest` (MIT © Teknium, Hermes catalog) and `red-team-engagement`
+  (MIT © 2026 Bri Russell,
+  [briiirussell/cybersecurity-skills](https://github.com/briiirussell/cybersecurity-skills))
+  are **not included by owner decision** — this repo carries only original
+  content; third-party skills are linked, not mirrored.
 - `api-pentest` auth-matrix/scope-proof behaviors and the gateway fault taxonomy
   were developed during real authorized engagements (SOAP services behind a
   commercial API gateway).
