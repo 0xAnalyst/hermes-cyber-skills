@@ -13,6 +13,7 @@ same layout and quality conventions.
 |---|---|---|
 | [`skills/api-pentest`](skills/api-pentest/) | 1.2.0 | Non-destructive black-box API security assessment: recon → auth matrix → authz-scope proof → hardening → evidence-backed report, with OWASP API:2023 mapping and a 10-row coverage gate |
 | [`skills/api-retest-harness`](skills/api-retest-harness/) | 0.1.1 | Turns a pentest evidence JSONL into a rerunnable probe script — remediation checks become one command with baseline deltas; credentials never enter generated artifacts |
+| [`skills/php2shell-detection`](skills/php2shell-detection/) | 1.0.0 | Detects php2shell (CVE-2026-109618/109619) exploitation across request, outcome and execution planes — exact multipart signatures and body hashes, startup-OOM/crash discriminators that survive HTTP 200, webshell-fetch sweep, a stdlib log scanner, and SIEM/Elastic/Splunk/KQL/WAF queries with a triage decision tree |
 | [`skills/_template`](skills/_template/) | — | Scaffold for new skills — copy, rename, fill TODOs |
 
 ## Adding a skill
