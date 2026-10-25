@@ -37,6 +37,20 @@ Layout: `skills/<domain>/<skill-name>/` — `SKILL.md` plus optional `references
 No skills published yet — the first one lands here when it is built. Scope and
 ground rules are in [`skills/red-teaming/README.md`](skills/red-teaming/README.md).
 
+## Nothing internal ships
+
+Every public copy must stand on its own outside your network. Not just client and
+vendor names — no internal hostnames, RFC1918 addresses beyond documentation
+ranges, gateway URLs or ports, usernames, home-directory paths, ticket or alert
+IDs, or engagement dates. Write the generic version first (`example.corp`,
+`192.0.2.0/24`, `TARGET`); keep the concrete one in the private profile where the
+skill still runs. Two gates enforce this on every sync:
+
+| Gate | Catches | Behaviour |
+|---|---|---|
+| `scripts/publish_scrub.py` + `publish-scrub.json` | client/vendor names, in content **and** filenames | rewrites to placeholders, fails on leftovers |
+| `scripts/internal_info_lint.py` | personal paths, token/key shapes, `.internal`-style suffixes | fails the sync; warns on private-range IPs and unapproved emails |
+
 ## Adding a skill
 
 1. Author it in the Hermes profile (`~/.hermes/skills/<category>/<name>/`) — start

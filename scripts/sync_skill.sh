@@ -22,4 +22,6 @@ if [ -f "$DST/SKILL.md" ]; then
 fi
 # anonymize + leak-gate (public repo: vendor/client names never ship)
 python3 "$(dirname "$0")/publish_scrub.py" $(find "$DST" -type f -name "*.md" -o -type f -name "*.json" -o -type f -name "*.py" -o -type f -name "*.sh")
+# second gate: nothing internal — personal paths, credentials, private ranges (exit 1 fails the sync)
+python3 "$(dirname "$0")/internal_info_lint.py" $(find "$DST" -type f -name "*.md" -o -type f -name "*.json" -o -type f -name "*.py" -o -type f -name "*.sh")
 git -C "$(cd "$(dirname "$0")/.." && pwd)" status --short -- "skills/$DOMAIN/$NAME" || true

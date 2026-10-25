@@ -70,6 +70,7 @@ Don't use for: generic LFI/RCE triage (`web-pentest`), or serialization gadget c
 - **Truncated captures.** A 33-MB body can be cut by the sensor before the session cookie is logged; absence of the cookie is not absence of a leak.
 - **Fixed bodies identify a family, not success.** B1's hash appears in both attempt-only and confirmed-RCE captures.
 - **Join by process, not status.** Confirm execution by joining shell start to the request by time/port/worker identity (EDR/Tetragon), never by HTTP response alone.
+- **Test the de-escalation path, not just detection.** A scanner that fires on `internet-census` survey bodies and recon probes "works" while being unusable in production. Fixtures must assert that benign survey/recon input returns CLEAN as well as that attack fixtures escalate — and tag survey/recon per record at parse time so a mixed batch (one real exploit plus survey noise) still escalates.
 
 ## Verification
 

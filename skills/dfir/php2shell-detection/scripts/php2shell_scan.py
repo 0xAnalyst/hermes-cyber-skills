@@ -152,9 +152,9 @@ def verdict(records):
 
 def selftest():
     access = [
-        '10.0.0.9 - - [24/Oct/2026:15:35:11 +0000] "POST / HTTP/1.1" 200 512 "-" "-"',
-        '10.0.0.9 - - [24/Oct/2026:15:35:12 +0000] "GET /shell_deadbeef.phtml HTTP/1.1" 200 44 "-" "-"',
-        '10.0.0.9 - - [24/Oct/2026:15:35:13 +0000] "POST /index.php?PHP_SESSION_UPLOAD_PROGRESS=k0 HTTP/1.1" 200 512 "-" "-"',
+        '203.0.113.9 - - [24/Oct/2026:15:35:11 +0000] "POST / HTTP/1.1" 200 512 "-" "-"',
+        '203.0.113.9 - - [24/Oct/2026:15:35:12 +0000] "GET /shell_deadbeef.phtml HTTP/1.1" 200 44 "-" "-"',
+        '203.0.113.9 - - [24/Oct/2026:15:35:13 +0000] "POST /index.php?PHP_SESSION_UPLOAD_PROGRESS=k0 HTTP/1.1" 200 512 "-" "-"',
     ]
     errors = [
         "PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 4096 bytes) in Unknown on line 0",
