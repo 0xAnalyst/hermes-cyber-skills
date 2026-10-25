@@ -6,8 +6,8 @@
 set -euo pipefail
 DOMAIN="$1"; NAME="$2"; CAT="${3:-}"; HERMES="${4:-$HOME/.hermes/skills}"
 case "$DOMAIN" in
-  penetration-testing|dfir|red-teaming) ;;
-  *) echo "domain must be one of: penetration-testing dfir red-teaming (got '$DOMAIN')" >&2; exit 1 ;;
+  penetration-testing|dfir|red-teaming|threat-hunting) ;;
+  *) echo "domain must be one of: penetration-testing dfir red-teaming threat-hunting (got '$DOMAIN')" >&2; exit 1 ;;
 esac
 SRC="$HERMES${CAT:+/$CAT}/$NAME"
 DST="$(cd "$(dirname "$0")/.." && pwd)/skills/$DOMAIN/$NAME"

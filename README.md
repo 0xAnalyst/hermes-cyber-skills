@@ -15,6 +15,7 @@ layout and quality conventions.
 | [Penetration Testing](skills/penetration-testing/) | Authorized, non-destructive offensive assessment | 2 |
 | [DFIR](skills/dfir/) | Threat hunting, detection engineering, log forensics | 1 |
 | [Red Teaming](skills/red-teaming/) | Adversary emulation, engagement scoping, opsec | — |
+| [Threat Hunting](skills/threat-hunting/) | MITRE ATT&CK-mapped hunts, one skill per tactic | 15 |
 
 Layout: `skills/<domain>/<skill-name>/` — `SKILL.md` plus optional `references/`,
 `scripts/`, `examples/`. The scaffold lives at [`skills/_template`](skills/_template/).
@@ -50,6 +51,20 @@ skill still runs. Two gates enforce this on every sync:
 |---|---|---|
 | `scripts/publish_scrub.py` + `publish-scrub.json` | client/vendor names, in content **and** filenames | rewrites to placeholders, fails on leftovers |
 | `scripts/internal_info_lint.py` | personal paths, token/key shapes, internal-only domain suffixes | fails the sync; warns on private-range IPs and unapproved emails |
+
+## Threat Hunting
+
+One skill per Enterprise ATT&CK tactic, all running inside a shared `hunt-method`:
+hypothesis → observable → discriminator → confirmation, with evidence rules, a
+false-positive catalogue and a fixed report contract.
+
+`hunt-method` · `reconnaissance` · `resource-development` · `initial-access` · `execution` ·
+`persistence` · `privilege-escalation` · `defense-evasion` · `credential-access` · `discovery` ·
+`lateral-movement` · `collection` · `command-and-control` · `exfiltration` · `impact`
+
+Each skill states the telemetry inputs it needs before it can answer anything; the index and
+the "how to feed a hunt" contract live in
+[`skills/threat-hunting/README.md`](skills/threat-hunting/README.md).
 
 ## Adding a skill
 
