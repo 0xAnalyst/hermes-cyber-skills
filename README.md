@@ -1,7 +1,9 @@
 # hermes-skills
 
-A collection of skills for [Hermes Agent](https://hermes-agent.nousresearch.com/docs) —
+A growing collection of skills for [Hermes Agent](https://hermes-agent.nousresearch.com/docs) —
 reusable, evidence-driven methodologies that load automatically when a task matches.
+New skills land here as they're built; every skill is self-contained and follows the
+same layout and quality conventions.
 
 **Owner:** [0xanalyst](https://github.com/0xanalyst) · **License:** MIT
 
@@ -24,6 +26,7 @@ reusable, evidence-driven methodologies that load automatically when a task matc
    `publish-scrub.json`) rewrites client/vendor-specific names to generic
    placeholders and **fails the sync** if any forbidden pattern survives —
    deployment-specific notes stay private, public copies stay generic.
+4. Update the Skills table above — one row per skill, version included.
 
 ## Install into Hermes
 
@@ -41,17 +44,16 @@ cp -r hermes-skills/skills/<skill-name> ~/.hermes/skills/<category>/
   upstream notice retained in the file header.
 - `api-pentest/references/owasp-api-mapping.md` — category definitions and CWE
   mappings from the official OWASP API Security Top 10 (2023) pages (owasp.org).
-- `web-pentest` (MIT © Teknium, Hermes catalog) and `red-team-engagement`
-  (MIT © 2026 Bri Russell,
-  [briiirussell/cybersecurity-skills](https://github.com/briiirussell/cybersecurity-skills))
-  are **not included by owner decision** — this repo carries only original
-  content; third-party skills are linked, not mirrored.
-- `api-pentest` auth-matrix/scope-proof behaviors and the gateway fault taxonomy
-  were developed during real authorized engagements (SOAP services behind a
-  commercial API gateway).
+- Third-party skills are **not mirrored** in this repo by owner decision — they are
+  linked instead (e.g. `red-team-engagement` from
+  [briiirussell/cybersecurity-skills](https://github.com/briiirussell/cybersecurity-skills), MIT).
+- Skill behaviors were developed during real, authorized engagements; findings,
+  hosts, and vendors of those engagements never enter this repo (enforced by the
+  anonymization gate).
 
 ## Use responsibly
 
-These skills encode **authorized-engagement** methodologies. Confirm written
-authorization and scope before testing anything; no skill file implies
-pre-authorization on your behalf.
+Each skill defines its own domain rules and safety rails in its `SKILL.md` — read
+them before use. Skills that interact with live systems require explicit
+authorization from the target owner; no skill file implies pre-authorization on
+your behalf.
