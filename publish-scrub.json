@@ -1,0 +1,24 @@
+{
+  "_comment": "publish_scrub.py applies 'replacements' (in order, regex, case-insensitive) then fails on any 'forbidden' pattern. Patterns are regex-encoded so this config itself never contains the raw vendor/client names. This file is exempt from its own scrubbing (enforced in publish_scrub.py).",
+  "replacements": [
+    ["L[a-z]{4}7-API-Gateway", "Enterprise-API-Gateway"],
+    ["L[a-z]{4}7/CA gateway", "commercial API gateway"],
+    ["L[a-z]{4}7 gateway", "commercial gateway"],
+    ["l[a-z]{4}7-gateway\\.md", "gateway-faults.md"],
+    ["l[a-z]{4}7-url-map\\.json", "gateway-url-map.json"],
+    ["L[a-z]{4}7", "commercial gateway"],
+    ["l[a-z]{4}7", "gateway"],
+    ["api-esb\\.al[jz]azeera\\.tv", "api-esb.example.corp"],
+    ["api-ext\\.al[jz]azeera\\.net", "api-ext.example.corp"],
+    ["api-dev\\.al[jz]azeera\\.tv", "api-dev.example.corp"],
+    ["al[jz]azeera\\.tv", "example.corp"],
+    ["al[jz]azeera\\.net", "example.corp"],
+    ["[Aa]l[ ]?[jJ][aA][zZ][eE]{2}[rR][aA] Media Network", "Example Media Network"],
+    ["[Aa]l[ ]?[jJ][aA][zZ][eE]{2}[rR][aA]", "Example Org"],
+    ["sap-client=\\d{3}", "sap-client=NNN"]
+  ],
+  "forbidden": [
+    "[lL][a-z]{4}7",
+    "[Aa]l[ ]?[jJ][aA][zZ][eE]{2}[rR][aA]"
+  ]
+}

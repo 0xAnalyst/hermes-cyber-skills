@@ -1,0 +1,195 @@
+{
+ "retest-wsdl": {
+  "ZBC_DOA": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/doa?wsdl",
+   "method": "GET"
+  },
+  "ZBC_GET_ADS": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_ads?wsdl",
+   "method": "GET"
+  },
+  "ZBC_UPDATE_ADS": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/update_ads?wsdl",
+   "method": "GET"
+  },
+  "ZBC_UPDATE_SAP": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/update_sap?wsdl",
+   "method": "GET"
+  },
+  "ZHR_EMPCOUNT_API": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/employee_count?wsdl",
+   "method": "GET"
+  },
+  "ZHR_GET_ACTIVE_EMPLOYEES": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_active_employees?wsdl",
+   "method": "GET"
+  },
+  "ZHR_GET_EMPLOYEES_LIST": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_employees_list?wsdl",
+   "method": "GET"
+  },
+  "ZHR_GET_EMPLOYEE_DATA2": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_employee_details?wsdl",
+   "method": "GET"
+  },
+  "ZHR_LETTER_QR": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_qr_letter?wsdl",
+   "method": "GET"
+  },
+  "ZHR_ORGUNT_POS_PER_LIST": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_pos_org_unit?wsdl",
+   "method": "GET"
+  },
+  "ZHR_ORG_STRUC_LIST": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_org_structure?wsdl",
+   "method": "GET"
+  },
+  "ZHR_WFRS_REQUESTS": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/wfrs_requests?wsdl",
+   "method": "GET"
+  },
+  "ZHR_WFRS_UPDATE_STATUS": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/wfrs_update_status?wsdl",
+   "method": "GET"
+  }
+ },
+ "retest-auth-matrix": {
+  "no-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/employee_count",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_EMPCOUNT_API><urn:BUREAU></urn:BUREAU></urn:ZHR_EMPCOUNT_API></soapenv:Body></soapenv:Envelope>"
+  },
+  "bad-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/employee_count",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_EMPCOUNT_API><urn:BUREAU></urn:BUREAU></urn:ZHR_EMPCOUNT_API></soapenv:Body></soapenv:Envelope>"
+  },
+  "good-key-hdr": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/employee_count",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_EMPCOUNT_API><urn:BUREAU></urn:BUREAU></urn:ZHR_EMPCOUNT_API></soapenv:Body></soapenv:Envelope>"
+  },
+  "good-key-query-N/A": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/employee_count?apikey={{API_KEY}}",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_EMPCOUNT_API><urn:BUREAU></urn:BUREAU></urn:ZHR_EMPCOUNT_API></soapenv:Body></soapenv:Envelope>"
+  }
+ },
+ "retest-write-auth": {
+  "no-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/update_ads",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZBC_UPDATE_ADS><urn:BUREAU></urn:BUREAU></urn:ZBC_UPDATE_ADS></soapenv:Body></soapenv:Envelope>"
+  },
+  "good-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/update_ads",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZBC_UPDATE_ADS><urn:BUREAU></urn:BUREAU></urn:ZBC_UPDATE_ADS></soapenv:Body></soapenv:Envelope>"
+  }
+ },
+ "retest-pii-zero-row": {
+  "no-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_employees_list",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_GET_EMPLOYEES_LIST><urn:EMP_NAME_EN>ZZZNOSUCHPERSONZZZ</urn:EMP_NAME_EN></urn:ZHR_GET_EMPLOYEES_LIST></soapenv:Body></soapenv:Envelope>"
+  },
+  "good-key": {
+   "url": "https://api-esb.example.corp/services/sap/soap/v1.0/get_employees_list",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_GET_EMPLOYEES_LIST><urn:EMP_NAME_EN>ZZZNOSUCHPERSONZZZ</urn:EMP_NAME_EN></urn:ZHR_GET_EMPLOYEES_LIST></soapenv:Body></soapenv:Envelope>"
+  }
+ },
+ "retest-http-key": {
+  "*": {
+   "url": "http://api-esb.example.corp/services/sap/soap/v1.0/employee_count",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "text/xml;charset=UTF-8",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\"><soapenv:Header/><soapenv:Body><urn:ZHR_EMPCOUNT_API><urn:BUREAU></urn:BUREAU></urn:ZHR_EMPCOUNT_API></soapenv:Body></soapenv:Envelope>"
+  }
+ },
+ "retest-ext-rest": {
+  "employees/no-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/employees",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  "employees/esb-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/employees",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "{}"
+  },
+  "leave/quota/no-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/leave/quota",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  "leave/quota/esb-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/leave/quota",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "{}"
+  },
+  "salaryslip/no-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/salaryslip",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json"
+   },
+   "body": "{}"
+  },
+  "salaryslip/esb-key": {
+   "url": "https://api-ext.example.corp/services/chatbot/rest/v1.0/sap/salaryslip",
+   "method": "POST",
+   "headers": {
+    "Content-Type": "application/json",
+    "apikey": "{{API_KEY}}"
+   },
+   "body": "{}"
+  }
+ },
+ "_note": "Retrofit map: phase+tag -> probe spec. {{API_KEY}} resolves from env at --fire time."
+}

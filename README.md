@@ -1,59 +1,58 @@
-# api-pentest — Hermes Agent skill
+# hermes-skills
 
-Non-destructive, black-box security assessment of documented HTTP APIs (REST,
-GraphQL, gRPC, WebSocket, SOAP) — designed for [Hermes Agent](https://hermes-agent.nousresearch.com/docs)
-but the methodology is agent-agnostic markdown.
+A collection of skills for [Hermes Agent](https://hermes-agent.nousresearch.com/docs) —
+reusable, evidence-driven methodologies that load automatically when a task matches.
 
-**Author:** [0xanalyst](https://github.com/0xanalyst) · **Version:** 1.1.0 · **License:** MIT
+**Owner:** [0xanalyst](https://github.com/0xanalyst) · **License:** MIT
 
-## What it does
+## Skills
 
-Structured engagement workflow: inventory → recon (DNS/TLS/certs) → schema
-exposure → auth matrix → authorization-scope proof → hardening checks →
-evidence-backed report with severities calibrated to the deployment's actual
-threat model (internally hosted vs internet-exposed).
+| Skill | Version | Purpose |
+|---|---|---|
+| [`skills/api-pentest`](skills/api-pentest/) | 1.1.0 | Non-destructive black-box API security assessment: recon → auth matrix → authz-scope proof → hardening → evidence-backed report, with OWASP API:2023 mapping and a 10-row coverage gate |
+| [`skills/api-retest-harness`](skills/api-retest-harness/) | 0.1.0 | Turns a pentest evidence JSONL into a rerunnable probe script — remediation checks become one command with baseline deltas; credentials never enter generated artifacts |
+| [`skills/web-pentest`](skills/web-pentest/) | 1.0.0 | Authorized web-application pentest: recon, proof-based exploits, reporting (mirrored — see credits) |
+| [`skills/red-team-engagement`](skills/red-team-engagement/) | — | Planning and executing authorized red-team engagements, distinct from pentests (mirrored — see credits) |
+| [`skills/_template`](skills/_template/) | — | Scaffold for new skills — copy, rename, fill TODOs |
 
-Hard safety rails are built in: no valid payloads against write APIs (empty-body
-auth-pass proofs only), no bulk data extraction (zero-row filter probes), full
-request/response JSONL evidence logging, PII masking in chat output, and a
-request budget (~40–60 requests per ~15-API inventory).
+## Adding a skill
 
-## Files
+1. Author it in the Hermes profile (`~/.hermes/skills/<category>/<name>/`) — start
+   from [`skills/_template`](skills/_template/SKILL.md). Keep `SKILL.md` lean; depth
+   goes in `references/`, automation in `scripts/`.
+2. Sync it in: `./scripts/sync_skill.sh <category> <name>` — copies from the profile
+   **and runs the anonymization gate**.
+3. Review `git status`, commit, push. The gate (`scripts/publish_scrub.py` +
+   `publish-scrub.json`) rewrites client/vendor-specific names to generic
+   placeholders and **fails the sync** if any forbidden pattern survives —
+   deployment-specific notes stay private, public copies stay generic.
 
-| File | Purpose |
-|---|---|
-| `SKILL.md` | Procedure, always-on rules, pitfalls |
-| `references/non-destructive-probes.md` | Inert-request recipes: write-API auth proof, zero-row PII probes, XXE single-entity, rate-limit sizing, masking |
-| `references/gateway-gateway.md` | gateway/CA gateway fault taxonomy, apikey placement behavior, SOAP probe crafting, WSDL leak patterns |
-| `references/owasp-api-playbook.md` | Full OWASP API Top 10 technique playbook (REST/GraphQL/gRPC/WS/SOAP) |
-| `references/owasp-api-mapping.md` | OWASP API:2023 engagement mapping — official CWEs, credential-set → testable-categories matrix, gateway detection signals, worked example, report coverage gate, 2019→2023 crosswalk |
-
-## Install (Hermes)
-
-Copy into the profile's skills directory:
+## Install into Hermes
 
 ```bash
-git clone https://github.com/0xanalyst/api-pentest.git
-mkdir -p ~/.hermes/skills/security
-cp -r api-pentest/skills/api-pentest ~/.hermes/skills/security/
+git clone https://github.com/0xAnalyst/hermes-skills.git
+mkdir -p ~/.hermes/skills/<category>
+cp -r hermes-skills/skills/<skill-name> ~/.hermes/skills/<category>/
 ```
 
-The skill loads automatically when an API security assessment is requested.
+## Credits & provenance
 
-## Provenance & credits
-
-- `references/owasp-api-playbook.md` is adapted from
-  [narlyseorg/superhackers](https://github.com/narlyseorg/superhackers)
-  (`skills/api-pentesting`, MIT © 2025 Zoey) — with the self-asserted
-  authorization preamble and framework couplings removed, and Hermes-native
-  tooling notes added. MIT notice retained in the file header.
-- `references/owasp-api-mapping.md` CWE mappings are taken from the official
-  OWASP API Security Top 10 (2023) pages (owasp.org), fetched 2026-10-25.
-- Auth matrix, scope-proof and gateway behaviors were developed during a real
-  authorized assessment of SAP SOAP services behind a gateway API gateway.
+- `api-pentest/references/owasp-api-playbook.md` — adapted from
+  [narlyseorg/superhackers](https://github.com/narlyseorg/superhackers) (`skills/api-pentesting`,
+  MIT © 2025 Zoey): authorization-bypass preamble and framework couplings removed;
+  upstream notice retained in the file header.
+- `api-pentest/references/owasp-api-mapping.md` — category definitions and CWE
+  mappings from the official OWASP API Security Top 10 (2023) pages (owasp.org).
+- `web-pentest` — mirrored verbatim, MIT © Teknium (teknium1), Hermes Agent.
+- `red-team-engagement` — mirrored verbatim from
+  [briiirussell/cybersecurity-skills](https://github.com/briiirussell/cybersecurity-skills),
+  MIT © 2026 Bri Russell.
+- `api-pentest` auth-matrix/scope-proof behaviors and the gateway fault taxonomy
+  were developed during real authorized engagements (SOAP services behind a
+  commercial API gateway).
 
 ## Use responsibly
 
-This skill encodes an **authorized-engagement** methodology: confirm written
-authorization and scope before testing; the skill refuses to imply
+These skills encode **authorized-engagement** methodologies. Confirm written
+authorization and scope before testing anything; no skill file implies
 pre-authorization on your behalf.
