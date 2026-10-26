@@ -70,6 +70,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1552 Unsecured Credentials | EDR/file/cloud | credential-shaped file reads, metadata endpoint access |
 | T1555 Credentials from Password Stores | EDR | credential database touched by a non-browser process |
 
+## Detection-grade output
+
+Default severity **critical** (**99** when a dump is followed by use, **73** for the dump alone) — a dump plus subsequent authentication is working access; the dump alone is a strong lead.
+
+Analytic type: EQL sequence (credential-process access → dump file → authentication); KQL for spray shape.
+
+Validation: security products read credential memory by design; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Security products read credential memory by design.** Signer and product lineage decide;

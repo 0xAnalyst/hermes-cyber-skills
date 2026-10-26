@@ -66,6 +66,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1560 Archive Collected Data | EDR process | archive tool on a server role outside schedule |
 | T1113 Screen Capture | EDR | capture API in an unexpected binary |
 
+## Detection-grade output
+
+Default severity **medium** (**47** until data is confirmed staged, then **73**) — staging is preparation — it becomes severe only once data is confirmed moving.
+
+Analytic type: ES|QL volume by identity and path; threshold on archive jobs.
+
+Validation: backup and log-rotation jobs explain most volume; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Archiving is routine.** Log rotation, backups and packaging all compress; compare to the

@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1098 Account Manipulation | Directory/cloud audit | role grant outside approval, then immediate use |
 | T1055 Process Injection | EDR | remote thread into a privileged process |
 
+## Detection-grade output
+
+Default severity **high** (**73**) — rights appearing without a grant is a compromise step, not noise.
+
+Analytic type: EQL sequence (token use or service creation → privileged action); KQL for the grant itself.
+
+Validation: backup and security agents impersonate legitimately; require unsigned lineage; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Backup and security agents impersonate by design.** A cross-identity token from a signed

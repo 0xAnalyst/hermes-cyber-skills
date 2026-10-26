@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1027 Obfuscated Files or Information | EDR command line | high-entropy payload or layered base64 |
 | T1553 Subvert Trust Controls | EDR | signature validation disabled or trust store modified |
 
+## Detection-grade output
+
+Default severity **critical → high** (**99** for tamper or telemetry loss, **73** for proxy execution) — losing visibility is worse than losing a host's logs to noise — it blinds every other hunt.
+
+Analytic type: threshold on tamper events; KQL per LOLBin; ES|QL for source silence.
+
+Validation: a broken sensor is not an attack — require an actor identity and a ticket check; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **IT disables protection during troubleshooting.** Check tickets before escalating; the

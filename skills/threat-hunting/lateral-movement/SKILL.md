@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1563 Remote Session Hijacking | VPN/EDR | session reconnection from a different source |
 | T1021.001 Remote Desktop Protocol | 4624 type 10 | workstation-to-workstation RDP |
 
+## Detection-grade output
+
+Default severity **high** (**73**) — a new credential-bearing host pair is working access.
+
+Analytic type: EQL sequence (logon → process or share write); ES|QL for pair-matrix deviation.
+
+Validation: management, backup and AV pairs belong in the matrix; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Management, backup and AV move laterally by design.** Their service accounts and pairs

@@ -69,6 +69,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1566 Phishing | Mail gateway | attachment delivered, then a process chain on the recipient host |
 | T1195 Supply Chain | Vendor telemetry | largely out of internal view — track advisories instead |
 
+## Detection-grade output
+
+Default severity **medium → high** (**47** for attempts, **73** once a second plane confirms) — the request is cheap and constant; the join to execution is what proves a foothold.
+
+Analytic type: EQL sequence (request → child process or file write on the same host); KQL for the auth filter.
+
+Validation: blocked scanners stay at medium, edge-only exploit attempts must not page; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Scanners generate exploit-shaped 403s constantly.** Volume of exploit attempts is not

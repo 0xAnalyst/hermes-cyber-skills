@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1491 Defacement | FIM/web | web root modified then served publicly |
 | T1498 Network Denial of Service | Netflow | volumetric traffic originating inside |
 
+## Detection-grade output
+
+Default severity **critical** (**99**, always) — destruction or encryption is unrecoverable time — this pages, it does not queue.
+
+Analytic type: threshold on write/stop rates; ML where a baseline exists.
+
+Validation: backup windows and patch reboots look identical; check the clock first; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Backup software performs mass file operations.** Compare to the job schedule; a backup

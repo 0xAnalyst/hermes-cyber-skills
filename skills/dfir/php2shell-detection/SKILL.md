@@ -72,6 +72,20 @@ Don't use for: generic LFI/RCE triage (`web-pentest`), or serialization gadget c
 - **Join by process, not status.** Confirm execution by joining shell start to the request by time/port/worker identity (EDR/Tetragon), never by HTTP response alone.
 - **Test the de-escalation path, not just detection.** A scanner that fires on `internet-census` survey bodies and recon probes "works" while being unusable in production. Fixtures must assert that benign survey/recon input returns CLEAN as well as that attack fixtures escalate — and tag survey/recon per record at parse time so a mixed batch (one real exploit plus survey noise) still escalates.
 
+## Detection-grade output
+
+Default severity **high (73)** for an attempt evidenced on the outcome plane (startup OOM, worker
+crash tied to a request); **critical (99)** once the execution plane confirms (`shell_` fetch,
+worker-parent shell, 819,200-byte session cookie). Edge-only requests stay **medium (47)** — they
+are attempts, and scanners produce them constantly.
+
+Analytic types: literal counts (KQL/phrase queries) for the request plane; a request → child-process
+sequence on the same host for confirmation; ES|QL aggregation for per-source volume. Every detector
+ships with its benign twin — the survey, recon and lab classes in Pitfalls.
+
+Conventions behind these numbers (severity mapping, metadata, query hygiene): see the
+threat-hunting family's `hunt-method/references/detection-quality.md`.
+
 ## Verification
 
 - `scripts/php2shell_scan.py --selftest` passes (each plane's signatures fire on synthetic fixtures).

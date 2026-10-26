@@ -66,6 +66,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1608 Stage Capabilities | Proxy/DNS | hosting domain serving payload right before detonation |
 | T1588 Obtain Capabilities | EDR/file | cracked or repurposed tooling installers |
 
+## Detection-grade output
+
+Default severity **medium** (**47**) — campaign infrastructure is a lead until it delivers something.
+
+Analytic type: first-seen (`new_terms`) on sender domains; ES|QL for registration-age distribution.
+
+Validation: known vendors and marketing domains must not fire; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Legitimate new domains.** Marketing campaigns, new SaaS vendors and regional partners all

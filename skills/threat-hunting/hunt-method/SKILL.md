@@ -81,6 +81,11 @@ Every detector ships with its benign lookalikes and a rule for telling them apar
 4. **Blind spots** — what this telemetry cannot see, stated plainly.
 5. **Actions** — each with an owner-shaped verb: block, patch, confirm with owner, re-run.
 
+Attach detection-grade metadata to anything that will ship as a rule: severity/risk score from the
+canonical mapping (low 21 · medium 47 · high 73 · critical 99), MITRE IDs, the concrete benign twin,
+a reference link, and the analytic type that fits the question. Details:
+`references/detection-quality.md`.
+
 Never write "clean" without the plane. Never write "no evidence" when the answer is
 "no visibility".
 
@@ -100,3 +105,5 @@ Never write "clean" without the plane. Never write "no evidence" when the answer
 ## References
 
 - `references/hunt-report-template.md` — the five-part output, ready to fill.
+- `references/detection-quality.md` — severity mapping, required metadata, analytic-type and
+  query-hygiene conventions, two-direction validation.

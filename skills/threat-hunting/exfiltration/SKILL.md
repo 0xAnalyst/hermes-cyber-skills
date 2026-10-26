@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1537 Transfer Data to Cloud Account | Cloud audit | cross-account copy or public share |
 | T1029 Scheduled Transfer | Netflow | recurring large transfers outside business hours |
 
+## Detection-grade output
+
+Default severity **high → critical** (**73** suspicious channel, **99** once sensitivity is confirmed) — the channel decides the lead; the data decides the incident.
+
+Analytic type: ES|QL egress by host role; threshold on volume; DLP join for sensitivity.
+
+Validation: backups and SaaS sync dominate volume; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Backups and replication look identical.** Large scheduled transfers are usually legitimate;

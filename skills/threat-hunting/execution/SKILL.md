@@ -69,6 +69,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1204 User Execution | EDR | user-writable download directory followed by execution |
 | T1106 Native API | EDR API telemetry | direct syscalls from binaries with no vendor lineage |
 
+## Detection-grade output
+
+Default severity **medium → high** (**47** for a lone odd child, **73** when the child also makes a network connection) — spawning a shell is common; spawning one and calling out is not.
+
+Analytic type: EQL sequence (parent → child → connection); KQL for single-event role baselines.
+
+Validation: admin platforms and installers must score below the threshold or the queue drowns; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Management platforms use the same primitives.** SCCM, PDQ, Ansible and monitoring agents

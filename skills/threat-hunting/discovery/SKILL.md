@@ -67,6 +67,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1082 System Information Discovery | EDR process | discovery utilities on a server role where they are rare |
 | T1526 Cloud Service Discovery | Cloud audit | Describe/List burst across unused services |
 
+## Detection-grade output
+
+Default severity **low** (**21**) — enumeration alone is noise; it earns severity only in company.
+
+Analytic type: ES|QL aggregation per identity and target set; threshold for bursts.
+
+Validation: inventory agents and scanners out-volume most actors; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Vulnerability scanners and inventory agents do exactly this.** Range plus cadence plus

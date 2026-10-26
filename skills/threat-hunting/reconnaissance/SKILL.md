@@ -66,6 +66,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1598 Phishing for Information | Mail gateway, identity provider | credential-harvest domain, reply-to mismatch, urgency framing |
 | T1593 Search Open Websites/Domains | External only | not observable internally — track via brand monitoring instead |
 
+## Detection-grade output
+
+Default severity **low** (**21**) — a single-source burst is volume, not access — it must not compete with execution alerts.
+
+Analytic type: ES|QL aggregation by client and user agent; KQL for the raw edge filter.
+
+Validation: a quiet week must return only labelled crawlers; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Crawlers look like scanners.** Search-index and ad-verification agents fetch odd paths at

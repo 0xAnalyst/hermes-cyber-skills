@@ -69,6 +69,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1136 Create Account | 4720, directory audit | account created outside onboarding workflow |
 | T1505 Server Software Component | EDR file + web logs | new script in a served directory, then GET/POST to it |
 
+## Detection-grade output
+
+Default severity **high** (**73**) — a startup item nobody can explain survives reboots — that is working access.
+
+Analytic type: first-seen (`new_terms`) on service, task and autostart names; KQL per mechanism.
+
+Validation: deployment agents must match an allowlist entry, not a blanket suppression; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Patch and monitoring agents create services and tasks legitimately.** Compare to the

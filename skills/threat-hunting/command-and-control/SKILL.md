@@ -68,6 +68,15 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1568 Dynamic Resolution | DNS | fast-flux or DDNS patterns for the same hostname |
 | T1095 Non-Application Layer Protocol | Firewall/netflow | ICMP or raw protocol carrying payload |
 
+## Detection-grade output
+
+Default severity **high** (**73**) — a channel to an unowned destination with an unexplained process is access.
+
+Analytic type: ES|QL statistics for interval and byte profile; first-seen on destination.
+
+Validation: update agents beacon by design — application and rule name decide; a synthetic positive must fire before it ships.
+Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+
 ## Pitfalls
 
 - **Update and telemetry agents beacon by design.** Application name, allow rule and byte
