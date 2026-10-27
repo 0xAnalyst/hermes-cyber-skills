@@ -67,14 +67,34 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1491 Defacement | FIM/web | web root modified then served publicly |
 | T1498 Network Denial of Service | Netflow | volumetric traffic originating inside |
 
-## Detection-grade output
+## Detection content
 
-Default severity **critical** (**99**, always) — destruction or encryption is unrecoverable time — this pages, it does not queue.
+### Mass file writes on one host
+Encryption is a write storm. Rate per host is the signal; the extension change is confirmation.
 
-Analytic type: threshold on write/stop rates; ML where a baseline exists.
+```esql
+from logs-endpoint.events.file-*
+| where event.type in ("creation", "change", "rename")
+| stats n = count() by host.name, bucket = bucket(@timestamp, 5 minutes)
+| where n >= 500
+```
 
-Validation: backup windows and patch reboots look identical; check the clock first; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* file events with `host.name`; compare with backup windows, which produce the same shape on
+file servers.
+
+### Recovery inhibition commands
+A short, brutal list. If any of these runs outside a change window, escalate before confirming
+anything else.
+
+```kql
+process.command_line : (
+  "*vssadmin*delete*shadows*", "*wmic*shadowcopy*delete*", "*wbadmin*delete*catalog*",
+  "*bcdedit*/set*recoveryenabled*no*", "*Win32_ShadowCopy*Delete*", "*schtasks*/delete*/tn*"
+)
+```
+
+*Needs:* process command lines; this query should be paired with an immediate paging action, not a
+queue.
 
 ## Pitfalls
 

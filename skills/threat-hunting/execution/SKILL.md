@@ -69,14 +69,46 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1204 User Execution | EDR | user-writable download directory followed by execution |
 | T1106 Native API | EDR API telemetry | direct syscalls from binaries with no vendor lineage |
 
-## Detection-grade output
+## Detection content
 
-Default severity **medium → high** (**47** for a lone odd child, **73** when the child also makes a network connection) — spawning a shell is common; spawning one and calling out is not.
+### Document → interpreter → connection
+Three steps in order is the classic loader shape; any one of them alone is routine.
 
-Analytic type: EQL sequence (parent → child → connection); KQL for single-event role baselines.
+```eql
+sequence by host.name with maxspan=3m
+  [process where event.type == "start" and
+     process.parent.name in ("winword.exe", "excel.exe", "powerpnt.exe", "outlook.exe")]
+  [process where event.type == "start" and
+     process.name in ("powershell.exe", "cmd.exe", "mshta.exe", "rundll32.exe", "wscript.exe", "bash")]
+  [network where event.type == "start"]
+```
 
-Validation: admin platforms and installers must score below the threshold or the queue drowns; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* process and network events with `host.name` and ECS process fields.
+
+### Service account spawning a shell
+When the parent is the application or service account, the shell is not a user action.
+
+```kql
+event.category : "process" and event.type : "start"
+  and process.parent.name : ("java", "tomcat9.exe", "w3wp.exe", "httpd", "nginx", "php-fpm")
+  and process.name : ("cmd.exe", "powershell.exe", "sh", "bash", "wscript.exe", "cscript.exe")
+```
+
+*Needs:* process events with `process.parent.name`.
+
+### Installer from a user profile
+Installers belong in managed deployment paths; one running out of Downloads is a delivery
+mechanism.
+
+```esql
+from logs-endpoint.events.process-*, logs-windows.sysmon_operational-*
+| where process.name in ("msiexec.exe", "setup.exe", "installer.exe")
+| where process.command_line like "*\\Users\\*" or process.command_line like "*\\Downloads\\*"
+| stats n = count() by host.name, user.name, process.command_line
+```
+
+*Needs:* process command lines; add your software-deployment paths as exclusions rather than
+suppressing the rule.
 
 ## Pitfalls
 

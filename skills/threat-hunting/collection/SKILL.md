@@ -66,14 +66,42 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1560 Archive Collected Data | EDR process | archive tool on a server role outside schedule |
 | T1113 Screen Capture | EDR | capture API in an unexpected binary |
 
-## Detection-grade output
+## Detection content
 
-Default severity **medium** (**47** until data is confirmed staged, then **73**) — staging is preparation — it becomes severe only once data is confirmed moving.
+### Mailbox rule forwarding externally
+The rule itself is common; the external destination is the finding.
 
-Analytic type: ES|QL volume by identity and path; threshold on archive jobs.
+```kql
+event.dataset : "o365.audit" and event.action : ("New-InboxRule", "Set-InboxRule")
+  and winlog.event_data.Parameters : ("*ForwardTo*", "*RedirectTo*", "*ForwardAsAttachmentTo*")
+```
 
-Validation: backup and log-rotation jobs explain most volume; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* M365/Exchange audit with rule parameters; compare the destination domain against your
+tenant's own domains and partner list.
+
+### Archive tool on a server role
+Servers do not usually compress user data interactively; the tool plus the host role is the signal.
+
+```kql
+event.category : "process" and process.name : ("7z.exe", "7za.exe", "rar.exe", "winrar.exe", "tar")
+  and host.name : ("*srv*", "*sql*", "*fs0*", "*app*")
+```
+
+*Needs:* process events; the host-name pattern is a placeholder for your real server naming
+convention or asset lookup.
+
+### Share read volume by identity
+Collection before exfiltration looks like a user reading far more than they own.
+
+```esql
+from logs-filebeat-*, logs-windows.security-*
+| where event.code == "5145"
+| stats files = count(), distinct_files = count_distinct(file.name) by user.name, host.name
+| where files >= 500
+```
+
+*Needs:* Windows 5145 detailed file share audit enabled — without it this hunt is unanswerable, so
+say so rather than reporting zero.
 
 ## Pitfalls
 

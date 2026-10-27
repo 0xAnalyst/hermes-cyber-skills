@@ -70,14 +70,45 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1552 Unsecured Credentials | EDR/file/cloud | credential-shaped file reads, metadata endpoint access |
 | T1555 Credentials from Password Stores | EDR | credential database touched by a non-browser process |
 
-## Detection-grade output
+## Detection content
 
-Default severity **critical** (**99** when a dump is followed by use, **73** for the dump alone) — a dump plus subsequent authentication is working access; the dump alone is a strong lead.
+### Credential process opened, then a dump appears
+The pair is what makes it a dump rather than a scan: access to the credential process followed by a
+file write of dump type on the same host.
 
-Analytic type: EQL sequence (credential-process access → dump file → authentication); KQL for spray shape.
+```eql
+sequence by host.name with maxspan=2m
+  [any where event.code == "10" and winlog.event_data.TargetImage : "*lsass.exe"]
+  [file where event.type in ("creation", "change") and file.extension : ("dmp", "tmp", "bin")]
+```
 
-Validation: security products read credential memory by design; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* Sysmon EID 10 (process access) with `winlog.event_data.TargetImage`, plus file events.
+
+### Signed-utility dump
+The administrative minidump path — a system DLL invoked from a shell — is the most common
+credential-theft technique on Windows and needs no malware.
+
+```kql
+process.command_line : (
+  "*comsvcs*MiniDump*", "*comsvcs.dll,#+000024*", "*procdump*lsass*",
+  "*rundll32*comsvcs*", "*MiniDumpWriteDump*"
+)
+```
+
+*Needs:* command lines; suppress genuinely sanctioned dump tooling by hash and owner, not by name.
+
+### Spray silhouette
+Distributed failures, one success — the same shape as an authentication attack should be, and the
+one that most often gets missed because the account that succeeds looks normal.
+
+```esql
+from logs-system.security-*
+| where event.code in ("4625", "4771")
+| stats attempts = count(), accounts = count_distinct(user.name) by source.ip
+| where attempts >= 20 and accounts >= 5
+```
+
+*Needs:* failed-logon events with `source.ip` and `user.name`.
 
 ## Pitfalls
 

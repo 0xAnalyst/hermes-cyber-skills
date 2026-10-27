@@ -66,14 +66,33 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1598 Phishing for Information | Mail gateway, identity provider | credential-harvest domain, reply-to mismatch, urgency framing |
 | T1593 Search Open Websites/Domains | External only | not observable internally — track via brand monitoring instead |
 
-## Detection-grade output
+## Detection content
 
-Default severity **low** (**21**) — a single-source burst is volume, not access — it must not compete with execution alerts.
+### One source, many paths
+Path breadth from a single client in a short bucket is the scanner silhouette; a crawler spreads
+across paths too, but usually with a labelled user agent and a slower cadence.
 
-Analytic type: ES|QL aggregation by client and user agent; KQL for the raw edge filter.
+```esql
+from logs-*.access-*, logs-akamai.siem-*
+| where http.response.status_code in (403, 404)
+| stats paths = count_distinct(url.path), hits = count() by source.ip, bucket = bucket(@timestamp, 10 minutes)
+| where paths > 50 and hits > 100
+```
 
-Validation: a quiet week must return only labelled crawlers; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* edge access logs with `source.ip`, `url.path`, `http.response.status_code`, `user_agent.original`.
+
+### Product-shaped probing
+Generic crawlers rarely request a specific product's admin surface. These paths are the
+fingerprint of someone who already knows what they hope to find.
+
+```kql
+http.response.status_code : (403 or 404) and url.path : (
+  "*/actuator/env", "*/actuator/health", "*/.git/config", "*/server-status",
+  "*/console/login", "*/wp-json/wp/v2/users", "*/_cat/indices", "*/solr/admin"
+)
+```
+
+*Needs:* same edge logs; path list is deliberately short and high-signal — extend per estate.
 
 ## Pitfalls
 

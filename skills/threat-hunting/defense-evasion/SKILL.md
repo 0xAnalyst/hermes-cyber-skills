@@ -67,14 +67,42 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1027 Obfuscated Files or Information | EDR command line | high-entropy payload or layered base64 |
 | T1553 Subvert Trust Controls | EDR | signature validation disabled or trust store modified |
 
-## Detection-grade output
+## Detection content
 
-Default severity **critical → high** (**99** for tamper or telemetry loss, **73** for proxy execution) — losing visibility is worse than losing a host's logs to noise — it blinds every other hunt.
+### Audit log cleared
+Two event IDs, almost no benign population outside a documented maintenance window.
 
-Analytic type: threshold on tamper events; KQL per LOLBin; ES|QL for source silence.
+```kql
+event.code : ("1102", "104") or event.action : "audit-log-cleared"
+```
 
-Validation: a broken sensor is not an attack — require an actor identity and a ticket check; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* Security channel; document accepted maintenance windows instead of suppressing.
+
+### Source went quiet
+Silence is a finding only when compared with the same source's own history — this query makes the
+comparison explicit rather than assuming it.
+
+```esql
+from logs-endpoint.events.process-*
+| stats c = count() by host.name, bucket = bucket(@timestamp, 1 hour)
+| where c < 10
+```
+
+*Needs:* any high-volume source with per-host-per-hour history; run against a 7-day window so
+"quiet" has a denominator.
+
+### System binary with an outbound connection
+Proxy execution matters when the proxy also phones home.
+
+```eql
+sequence by host.name with maxspan=2m
+  [process where event.type == "start" and
+     process.name in ("rundll32.exe", "regsvr32.exe", "mshta.exe", "certutil.exe", "bitsadmin.exe")]
+  [network where event.type == "start" and destination.ip != null]
+```
+
+*Needs:* process plus network events; add vendor allowlists for signed update paths only after
+verifying them.
 
 ## Pitfalls
 

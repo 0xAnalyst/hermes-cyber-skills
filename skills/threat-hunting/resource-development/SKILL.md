@@ -66,14 +66,33 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1608 Stage Capabilities | Proxy/DNS | hosting domain serving payload right before detonation |
 | T1588 Obtain Capabilities | EDR/file | cracked or repurposed tooling installers |
 
-## Detection-grade output
+## Detection content
 
-Default severity **medium** (**47**) — campaign infrastructure is a lead until it delivers something.
+### First-seen destinations per host
+Newly registered or newly staged infrastructure looks exactly like this: a hostname that has never
+been resolved by that host, seen a handful of times, then forgotten.
 
-Analytic type: first-seen (`new_terms`) on sender domains; ES|QL for registration-age distribution.
+```esql
+from logs-dns-*
+| where dns.question.type == "A"
+| stats first = min(@timestamp), hits = count() by host.name, dns.question.name
+| where first >= now() - 1 day and hits <= 5
+```
 
-Validation: known vendors and marketing domains must not fire; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* DNS resolver logs with `host.name`, `dns.question.name`, `dns.question.type`.
+
+### Inbound mail from young, unauthenticated domains
+Registration age is the cheapest reputation signal available and the one attackers cannot fake
+without spending time.
+
+```kql
+event.category : "email" and email.direction : "inbound"
+  and source.domain.age_days <= 30
+  and not email.dmarc : "pass"
+```
+
+*Needs:* mail gateway events plus a domain-age enrichment (join or ingest-time lookup). Without the
+enrichment, substitute "first seen in 30 days" from your own mail history.
 
 ## Pitfalls
 

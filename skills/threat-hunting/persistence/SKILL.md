@@ -69,14 +69,45 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1136 Create Account | 4720, directory audit | account created outside onboarding workflow |
 | T1505 Server Software Component | EDR file + web logs | new script in a served directory, then GET/POST to it |
 
-## Detection-grade output
+## Detection content
 
-Default severity **high** (**73**) — a startup item nobody can explain survives reboots — that is working access.
+### Service installed from outside system paths
+The mechanism is legitimate; the location is not. This is the highest-yield persistence query on
+Windows because the benign population is small and mostly known.
 
-Analytic type: first-seen (`new_terms`) on service, task and autostart names; KQL per mechanism.
+```kql
+event.code : "7045"
+  and not winlog.event_data.ImagePath : (
+    "C:\\Windows\\System32\\*", "C:\\Windows\\SysWOW64\\*",
+    "C:\\Program Files\\*", "C:\\Program Files (x86)\\*"
+  )
+```
 
-Validation: deployment agents must match an allowlist entry, not a blanket suppression; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* System channel 7045 with `winlog.event_data.ImagePath`, `winlog.event_data.ServiceName`.
+
+### First-seen autostart value per host
+One host writing a Run key it has never written before is more interesting than the thousandth
+entry on a developer laptop.
+
+```esql
+from logs-windows.sysmon_operational-*
+| where event.code == "13" and registry.path like "*CurrentVersion\\\\Run*"
+| stats first = min(@timestamp), n = count() by host.name, registry.value, registry.data.strings
+| where n <= 2
+```
+
+*Needs:* Sysmon registry events (EID 13) with `registry.path`, `registry.value`.
+
+### New account immediately granted privilege
+Creation and group-add in one breath is an actor, not an onboarding workflow.
+
+```eql
+sequence by winlog.event_data.TargetUserName with maxspan=5m
+  [any where event.code == "4720"]
+  [any where event.code in ("4728", "4732", "4756")]
+```
+
+*Needs:* Security channel 4720/4728/4732/4756 with `winlog.event_data.TargetUserName`.
 
 ## Pitfalls
 

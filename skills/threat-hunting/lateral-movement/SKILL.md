@@ -67,14 +67,42 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1563 Remote Session Hijacking | VPN/EDR | session reconnection from a different source |
 | T1021.001 Remote Desktop Protocol | 4624 type 10 | workstation-to-workstation RDP |
 
-## Detection-grade output
+## Detection content
 
-Default severity **high** (**73**) — a new credential-bearing host pair is working access.
+### Remote logon then service creation
+Two event IDs, one host, minutes apart: the remote-execution signature used by most frameworks.
 
-Analytic type: EQL sequence (logon → process or share write); ES|QL for pair-matrix deviation.
+```eql
+sequence by host.name with maxspan=5m
+  [any where event.code == "4624" and winlog.event_data.LogonType in ("3", "10")]
+  [any where event.code == "7045"]
+```
 
-Validation: management, backup and AV pairs belong in the matrix; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* Security channel 4624 (with `LogonType`) and 7045 on the target host.
+
+### WMI provider host as the parent
+Whatever ran, it ran through WMI — the parent tells you more than the child.
+
+```kql
+event.category : "process" and process.parent.name : "wmiprvse.exe"
+  and process.name : ("cmd.exe", "powershell.exe", "rundll32.exe", "regsvr32.exe")
+```
+
+*Needs:* process events with `process.parent.name`; baseline legitimate management tooling that
+uses WMI in your estate.
+
+### Rare host pair
+The pair matrix is the detector: this ranks source→destination combinations by how rarely they occur.
+
+```esql
+from logs-system.security-*
+| where event.code == "4624" and winlog.event_data.LogonType == "3"
+| stats n = count() by source.ip, host.name
+| where n <= 3
+```
+
+*Needs:* authentication events with `source.ip` and `host.name`; run over 30 days and treat the tail
+as the candidate set, not as findings.
 
 ## Pitfalls
 

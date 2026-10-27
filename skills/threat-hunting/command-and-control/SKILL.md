@@ -68,14 +68,43 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1568 Dynamic Resolution | DNS | fast-flux or DDNS patterns for the same hostname |
 | T1095 Non-Application Layer Protocol | Firewall/netflow | ICMP or raw protocol carrying payload |
 
-## Detection-grade output
+## Detection content
 
-Default severity **high** (**73**) — a channel to an unowned destination with an unexplained process is access.
+### Beacon shape by destination
+Regular contacts, small payloads, one destination. Interval alone is weak; interval plus low byte
+volume plus novelty is not.
 
-Analytic type: ES|QL statistics for interval and byte profile; first-seen on destination.
+```esql
+from logs-network_traffic-*
+| stats n = count(), out = sum(source.bytes), in = sum(destination.bytes)
+        by host.name, destination.ip, destination.port
+| where n >= 50 and in < 10000 and out < 10000
+```
 
-Validation: update agents beacon by design — application and rule name decide; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* flow records with byte counters; then subtract known update/telemetry endpoints by
+application name, not by IP reputation.
+
+### First-seen external destination
+A host's first-ever contact with an external IP is the cheapest novelty signal available.
+
+```esql
+from logs-network_traffic-*
+| stats first = min(@timestamp), n = count() by host.name, destination.ip
+| where first >= now() - 1 day and n <= 10
+```
+
+*Needs:* 30 days of flow history to make "first" meaningful.
+
+### Long-label DNS
+Tunnels and some frameworks encode data in query labels; legitimate CDN and DKIM names also produce
+long labels, so filter by label entropy and query type rather than length alone.
+
+```kql
+dns.question.name : /[a-z0-9]{40,}\./ and dns.question.type : ("TXT", "NULL", "CNAME")
+```
+
+*Needs:* resolver logs with `dns.question.name` and `dns.question.type`; verify hits against known
+telemetry clients before escalating.
 
 ## Pitfalls
 

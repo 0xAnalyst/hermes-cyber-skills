@@ -67,14 +67,38 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1098 Account Manipulation | Directory/cloud audit | role grant outside approval, then immediate use |
 | T1055 Process Injection | EDR | remote thread into a privileged process |
 
-## Detection-grade output
+## Detection content
 
-Default severity **high** (**73**) — rights appearing without a grant is a compromise step, not noise.
+### Service created by a user identity
+Services run as SYSTEM. A service install whose creating identity is a normal user is elevation by
+definition — no exploit signature required.
 
-Analytic type: EQL sequence (token use or service creation → privileged action); KQL for the grant itself.
+```kql
+event.code : "7045" and not user.name : ("SYSTEM", "LOCAL SERVICE", "NETWORK SERVICE", "*$")
+```
 
-Validation: backup and security agents impersonate legitimately; require unsigned lineage; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* System channel 7045 with the creating identity in `user.name`; verify your log pipeline
+actually populates it, otherwise this query silently matches nothing.
+
+### Elevation-control bypass
+Auto-elevating binaries are allowlisted by Windows itself, which is exactly why they are abused.
+The child is the signal.
+
+```kql
+process.parent.name : ("fodhelper.exe", "computerdefaults.exe", "sdclt.exe", "eventvwr.exe")
+  and process.name : ("cmd.exe", "powershell.exe", "mshta.exe")
+```
+
+*Needs:* process events with `process.parent.name`.
+
+### Sudoers or setuid change
+On Linux, privilege is usually granted by editing a file — watch the file.
+
+```kql
+file.path : ("/etc/sudoers", "/etc/sudoers.d/*") and event.action : ("change", "created", "modified")
+```
+
+*Needs:* file integrity monitoring or auditd `file.path` events.
 
 ## Pitfalls
 

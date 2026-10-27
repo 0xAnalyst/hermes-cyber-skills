@@ -67,14 +67,37 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1082 System Information Discovery | EDR process | discovery utilities on a server role where they are rare |
 | T1526 Cloud Service Discovery | Cloud audit | Describe/List burst across unused services |
 
-## Detection-grade output
+## Detection content
 
-Default severity **low** (**21**) — enumeration alone is noise; it earns severity only in company.
+### Tool burst on one host
+One discovery tool is normal; three different ones inside five minutes is a person building a
+picture of the host.
 
-Analytic type: ES|QL aggregation per identity and target set; threshold for bursts.
+```esql
+from logs-endpoint.events.process-*, logs-windows.sysmon_operational-*
+| where process.name in ("whoami.exe", "systeminfo.exe", "nltest.exe", "net.exe", "net1.exe",
+                         "ipconfig.exe", "arp.exe", "qwinsta.exe", "quser.exe", "tasklist.exe")
+| stats n = count(), tools = count_distinct(process.name)
+        by host.name, user.name, bucket = bucket(@timestamp, 5 minutes)
+| where tools >= 3
+```
 
-Validation: inventory agents and scanners out-volume most actors; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* process events with `process.name`, `user.name`.
+
+### Internal port sweep
+A host opening many distinct destination ports inside the estate is either a scanner or an intruder —
+the account settles it.
+
+```esql
+from logs-network_traffic-*
+| where destination.ip is not null
+| stats ports = count_distinct(destination.port), dsts = count_distinct(destination.ip) by source.ip
+| where ports >= 100 and dsts >= 20
+```
+
+*Needs:* east-west flow records with `source.ip`, `destination.ip`, `destination.port`. Scope to
+internal ranges with your own CIDR list or an enrichment lookup, and exclude the vulnerability
+scanners by source address.
 
 ## Pitfalls
 

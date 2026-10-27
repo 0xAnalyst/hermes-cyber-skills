@@ -69,14 +69,47 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1566 Phishing | Mail gateway | attachment delivered, then a process chain on the recipient host |
 | T1195 Supply Chain | Vendor telemetry | largely out of internal view — track advisories instead |
 
-## Detection-grade output
+## Detection content
 
-Default severity **medium → high** (**47** for attempts, **73** once a second plane confirms) — the request is cheap and constant; the join to execution is what proves a foothold.
+### Exploit request followed by a worker child
+The request alone is noise — scanners produce it all day. The request *and* a process spawned by
+the web worker seconds later is a foothold.
 
-Analytic type: EQL sequence (request → child process or file write on the same host); KQL for the auth filter.
+```eql
+sequence by host.name with maxspan=2m
+  [any where event.category == "web" and http.response.status_code >= 400]
+  [process where event.type == "start" and
+     process.parent.name in ("w3wp.exe", "java", "httpd", "nginx", "php-fpm", "tomcat9.exe")]
+```
 
-Validation: blocked scanners stay at medium, edge-only exploit attempts must not page; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* web/proxy events and process events on the same host, both carrying `host.name`.
+
+### Spray silhouette then first success
+Many accounts, few attempts each, one source. The account that succeeds is usually not the one with
+the most failures — rank the source, not the user.
+
+```esql
+from logs-system.security-*, logs-o365.audit-*
+| where event.category == "authentication"
+| stats fails = count(eval(event.outcome == "failure")),
+        succ  = count(eval(event.outcome == "success")) by source.ip, user.name
+| where fails >= 10 and succ >= 1
+```
+
+*Needs:* authentication events with `event.outcome`, `source.ip`, `user.name`.
+
+### Remote service from a new network
+A VPN or remote-desktop session from an ASN that has never authenticated before is a lead worth a
+phone call, especially when it starts outside the user's working hours.
+
+```kql
+event.category : "authentication" and event.outcome : "success"
+  and event.action : ("vpn-login", "remote-desktop", "ssh-login")
+  and not source.as.number : (64999, 65000)
+```
+
+*Needs:* VPN/IdP events with `source.as.number`; populate the exclusion list with your own carriers
+and corporate egress ranges.
 
 ## Pitfalls
 

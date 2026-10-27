@@ -67,14 +67,32 @@ Fill these in before running — the hunt is unanswerable without them:
 | T1537 Transfer Data to Cloud Account | Cloud audit | cross-account copy or public share |
 | T1029 Scheduled Transfer | Netflow | recurring large transfers outside business hours |
 
-## Detection-grade output
+## Detection content
 
-Default severity **high → critical** (**73** suspicious channel, **99** once sensitivity is confirmed) — the channel decides the lead; the data decides the incident.
+### Outbound-dominant transfer by host role
+Direction is the discriminator: a server that mostly sends is either replicating or leaking, and the
+destination category decides which.
 
-Analytic type: ES|QL egress by host role; threshold on volume; DLP join for sensitivity.
+```esql
+from logs-network_traffic-*
+| stats out = sum(source.bytes), in = sum(destination.bytes)
+        by host.name, destination.ip, bucket = bucket(@timestamp, 1 hour)
+| where out > 100000000 and out > in * 10
+```
 
-Validation: backups and SaaS sync dominate volume; a synthetic positive must fire before it ships.
-Conventions — severity mapping, required metadata, query hygiene: `hunt-method/references/detection-quality.md`.
+*Needs:* flow or proxy byte counters per host; overlay your backup and replication jobs before
+calling anything a finding.
+
+### Upload to storage, paste or transfer services
+Conventional channels are the most common exfiltration path because they are allowed.
+
+```kql
+http.request.method : "POST"
+  and url.category : ("cloud storage", "file sharing", "webmail", "paste")
+  and source.bytes >= 1000000
+```
+
+*Needs:* proxy logs with URL category and request/response byte fields.
 
 ## Pitfalls
 
